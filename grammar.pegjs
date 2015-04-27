@@ -1,8 +1,3 @@
-/*
- * Classic example grammar, which recognizes simple arithmetic expressions like
- * "2*(3+4)". The parser generated from this grammar then computes their value.
- */
-
 //variablen *
 //natur konstanten *
 //trigonometrische fnk etc. *
@@ -14,6 +9,7 @@
 //freitext
 //komma um in einer Zeile zu bleiben, bei mehreren Gleichungen
 //exponenten
+//autocomplete
 
 {
 
@@ -32,16 +28,16 @@
   }
 
   function summation(over, from, to, sum){
-    var safe_var = variables[over];
+    var safe_var = variables[over]; //save context
     var acc = 0;
     for(var i = from; i <= to; (from < to) ? i++:i--){
-      //variables[over] = i; //deprecated
+      variables[over] = i;
       debugger;
-      var res = parse("i=" + i + ";" + sum);
-      acc += res[1][0].c;
+      var res = parse(sum);
+      acc += res[0][0].c;
 
     }
-    variables[over] = safe_var;
+    variables[over] = safe_var; //restore old context
     return acc;
   }
 }
