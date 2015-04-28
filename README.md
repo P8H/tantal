@@ -4,8 +4,3 @@ Official site: https://p8h.github.io/tantal/
 
 For more information, take a look into the development repository:
 https://github.com/P8H/tantal-dev
-
-## Special vars
-
-Value: _v(alue)
-Previous formula: _b(efore)
