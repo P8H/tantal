@@ -8,8 +8,9 @@
 //sonder vars (_before, _value) *
 //freitext
 //komma um in einer Zeile zu bleiben, bei mehreren Gleichungen
-//exponenten
+//exponenten *
 //autocomplete
+//klammern
 
 {
 
@@ -32,7 +33,6 @@
     var acc = 0;
     for(var i = from; i <= to; (from < to) ? i++:i--){
       variables[over] = i;
-      debugger;
       var res = parse(sum);
       acc += res[0][0].c;
 
@@ -63,13 +63,21 @@ multiplicative
   = left:division "*" right:multiplicative { return { d: left.d + "*" + right.d, c: left.c * right.c}; }
   / division
 
+//multiplicative2
+//  = "(" left:division ")(" right:multiplicative2 ")" { return { d: left.d + "*" + right.d, c: left.c * right.c}; }
+//  / division
+
 division
-  = left:primary "/" right:division { return { d: left.d + "/" + right.d, c: left.c / right.c}; }
+  = left:exponentiate "/" right:division { return { d: left.d + "/" + right.d, c: left.c / right.c}; }
+  / exponentiate
+
+exponentiate
+  = left:primary "^" right:exponentiate { return { d: left.d + "^" + right.d, c: Math.pow(left.c, right.c)}; }
   / primary
 
 primary
   = integer
-  / "(" da:additive ")" { return {d: "(" + da.d + ")", c: da.c}; }
+  / "(" left:additive ")(" right:additive ")" { return { d: "(" + left.d + ")(" + right.d + ")", c: left.c * right.c}; } / "(" da:additive ")" { return {d: "(" + da.d + ")", c: da.c}; }
 
 integer "integer"
   = vars
@@ -93,4 +101,5 @@ big_fnk = "sum" sum:additive "over" over:vars "from" from:additive "to" to:addit
 
 
 //Resources
-fnk_symbol = "sin" { return { d: "sin", f: Math.sin }; }
+fnk_symbol = "sin" { return { d: "sin", f: Math.sin }; } / "cos" { return { d: "cos", f: Math.cos }; } / "tan" { return { d: "tan", f: Math.tan }; }
+multi_types =

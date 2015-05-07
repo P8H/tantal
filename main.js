@@ -1,5 +1,5 @@
 
-//console.assert(parse("sumi*i+2overifrom0to4")[0][0].c == 40);
+"use strict";
 //load file grammar.pegjs
 var parser;
 window.variables = {}; //var holder for parser
@@ -9,6 +9,8 @@ $(function() {
     parser = PEG.buildParser(data);
     window.parse = parser.parse;
     refreshCanvas();
+
+    test();
   });
   //reload at change at console
   $("#console-input").change(refreshCanvas);
@@ -47,3 +49,20 @@ var refreshCanvas = function() {
   $("#canvas-field").empty().append(new_can);
   MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
 };
+
+//little unit test
+function test(){
+  console.assert(parseAndReturnNumber("sumi*i+2overifrom0to4") == 40, "summation test #1 failed");
+  console.assert(parseAndReturnNumber("(2+2)*(5+10)") == 60, "bracket test #1 failed");
+  console.assert(parseAndReturnNumber("(2+2)(5+10)") == 60, "bracket test #2 failed");
+  //console.assert(parseAndReturnNumber("(2*2)(2+2)(2+2)") == 64, "bracket test #3 failed"); //failed
+  console.assert(parseAndReturnNumber("2^4") == 16, "exponentiate test #1 failed");
+  console.assert(parseAndReturnNumber("9+(7+(2+6)*3)^4*4") == 3694093, "misc test #1 failed");
+  console.assert(parseAndReturnNumber("sin 0") == 0, "fnk symbol test #1 failed");
+  console.assert(parseAndReturnNumber("sin pi/2") == 1, "fnk symbol test #2 failed");
+  console.assert(parseAndReturnNumber("cos 0") == 1, "fnk symbol test #3 failed");
+}
+
+function parseAndReturnNumber(input){
+  return parse(input.replace(/ /g, ""))[0][0].c;
+}
